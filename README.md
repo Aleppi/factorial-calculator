@@ -1,0 +1,2 @@
+# factorial-calculator
+Calculate Fatorials
