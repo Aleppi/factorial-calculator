@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
 #define MAX_LINE 100
 
 enum _bool
@@ -18,7 +19,6 @@ unsigned long long readUserInput(void)
 	Bool valid = false;
 	while (!valid)
 	{
-		
 		fgets(s, sizeof(s), stdin);
 		int len = strlen(s);
 		while (len > 0 && isspace(s[len - 1]))
@@ -46,9 +46,7 @@ unsigned long long calculateFactorial(unsigned long long x)
 {
     unsigned long long result = 1;
     for (unsigned long long i = x; i > 1; --i)
-    {
         result *= i;
-    }
     return result;
 }
 
