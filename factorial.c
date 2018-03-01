@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#define MAX_LINE 5000
 
 enum _bool
 {
@@ -11,30 +13,32 @@ typedef enum _bool Bool;
 
 unsigned long long readUserInput(void)
 {
-	unsigned long long num;
-	scanf("%llu", &num);
 	char s[MAX_LINE];
+    //scanf("%s[MAX_LINE]", &s);
 	Bool valid = false;
-	fgets(s, sizeof(s), stdin);
-	int len = strlen(s);
-	while (len > 0 && isspace(s[len - 1]))
-	{
-		if (len > 0)
-		{
-			valid = true;
-			for (i = 0; i < len; ++i)
-			{
-				if (!isdigit([i]))
-				{
-					valid = false;
-					break;
-				}
-			}
-		}
-	}
-	if (valid == false)
-		printf("Please enter an integer.\n");
-	sscanf(s, "%d", num);
+    while(!valid)
+    {  
+	    fgets(s, sizeof(s), stdin);
+	    int len = strlen(s);
+	    while (len > 0 && isspace(s[len - 1]))
+	    {
+		    if (len > 0)
+		    {
+			    valid = true;
+			    for (int i = 0; i < len; ++i)
+			    {
+				    if (!isdigit(s[i]))
+				    {
+					    valid = false;
+                        break;
+				    }
+			    }
+                
+		    }
+	    }
+    }
+    unsigned long long num;
+    sscanf(s, "%d", num);
 	return num;
 }
 unsigned long long calculateFactorial(unsigned long long x)
