@@ -1,9 +1,51 @@
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_LINE 100
 
-unsigned long long int calculateFactorial(long long int x)
+enum _bool
 {
-    unsigned long long int result = 1;
-    for (unsigned long long int i = x; i > 1; --i)
+	false = 0,
+	true = 1
+};
+
+typedef enum _bool Bool;
+
+unsigned long long readUserInput(void)
+{
+	
+	char s[MAX_LINE];
+	Bool valid = false;
+	while (!valid)
+	{
+		
+		fgets(s, sizeof(s), stdin);
+		int len = strlen(s);
+		while (len > 0 && isspace(s[len - 1]))
+			--len;
+		if (len > 0)
+		{
+			valid = true;
+			for (int i = 0; i < len; ++i)
+			{
+				if (!isdigit(s[i]))
+				{
+					valid = false;
+					break;
+				}
+			}
+		}
+		if (!valid)
+			printf("Enter an integer: ");
+	}
+    unsigned long long num;
+    sscanf(s, "%d", &num);
+	return num;
+}
+unsigned long long calculateFactorial(unsigned long long x)
+{
+    unsigned long long result = 1;
+    for (unsigned long long i = x; i > 1; --i)
     {
         result *= i;
     }
@@ -13,9 +55,8 @@ unsigned long long int calculateFactorial(long long int x)
 int main(void)
 {
     printf("Enter the number to calculate the factorial of: ");
-    unsigned long long int x;
-    scanf("%llu", &x);
-    unsigned long long int xFactorial = calculateFactorial(x);
+    unsigned long long x = readUserInput();
+    unsigned long long xFactorial = calculateFactorial(x);
     printf("%d! = %llu\n", x, xFactorial);
     return 0;
 }
