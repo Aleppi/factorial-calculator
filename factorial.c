@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include "gmp.h"
 
 #define MAX_LINE 100
 
@@ -12,7 +13,7 @@ enum _bool
 
 typedef enum _bool Bool;
 
-unsigned long long readUserInput(void)
+int readUserInput(void)
 {
 	
 	char s[MAX_LINE];
@@ -38,23 +39,25 @@ unsigned long long readUserInput(void)
 		if (!valid)
 			printf("Enter an integer: ");
 	}
-    unsigned long long num;
+    int num;
     sscanf(s, "%d", &num);
 	return num;
 }
-unsigned long long calculateFactorial(unsigned long long x)
+void calculateFactorial(mpz_t result, int x)
 {
-    unsigned long long result = 1;
-    for (unsigned long long i = x; i > 1; --i)
-        result *= i;
-    return result;
+    mpz_init(result);
+    mpz_set_ui(result, 1);
+    for (unsigned long i = x; i > 1; --i)
+        mpz_mul_ui(result, result, i);
 }
 
 int main(void)
 {
     printf("Enter the number to calculate the factorial of: ");
-    unsigned long long x = readUserInput();
-    unsigned long long xFactorial = calculateFactorial(x);
-    printf("%d! = %llu\n", x, xFactorial);
+    int x = readUserInput();
+    mpz_t xFactorial;
+    mpz_init(xFactorial);
+    calculateFactorial(xFactorial, x);
+    gmp_printf("%d! = %Zd\n", x, xFactorial);
     return 0;
 }
