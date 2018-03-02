@@ -11,17 +11,17 @@ enum _bool
 	true = 1
 };
 
-enum inputType
+enum _inputType
 {
-    int = 0,
-    char = 1
+    number = 0,
+    letter = 1
 };
 
 typedef enum _bool Bool;
- 
+typedef enum _inputType inputType;
 char *readUserInput(inputType type)
 {
-	char s[MAX_LINE];
+	static char s[MAX_LINE];
 	Bool valid = false;
 	while (!valid)
 	{
@@ -34,7 +34,7 @@ char *readUserInput(inputType type)
 			valid = true;
 			for (int i = 0; i < len; ++i)
 			{
-                if (type == int)
+                if (type == number)
                 {
                     if (!isdigit(s[i]))
 				    {
@@ -42,7 +42,7 @@ char *readUserInput(inputType type)
 					    break;
 				    }
                 }
-                else if (type == char)
+                else if (type == letter)
                 {
                     if (isdigit(s[i]))
                     {
@@ -52,16 +52,17 @@ char *readUserInput(inputType type)
                 }
 			}
 		}
-		if (!valid && type == int)
+		if (!valid && type == number)
 			printf("Enter an positive integer: ");
-        else if (!valid && type == char)
+        else if (!valid && type == letter)
             printf("Enter a character: ");
 	}
 	return s;
 }
 
 int convertUserInput(char *s)
-    int num
+{
+    int num;
 	sscanf(s, "%d", &num);
 	return num;
 }
@@ -78,34 +79,34 @@ Bool userMenu(void)
 	Bool validInput = false;
 	while (!validInput)
 	{
-		printf("Enter 'f' to calculate another factorial.\n Enter 'q' to quit.\n");
-		inputType text = char;
+		printf("Enter 'f' to calculate another factorial.\nEnter 'q' to quit.\n");
+		inputType text = letter;
 		char *input = readUserInput(text);
-		if (&*input == 'f')
+		if (input[0] == 'f' && input[1] == '\n')
 		{
 			validInput = true;
-			return;
+			return true;
 		}
-		else if (&*input == 'q')
+		else if (input[0] == 'q' && input[1] == '\n')
 		{
 			validInput = true;
 			return false;
 		}
 		else
 		{
-			printf("%s is invalid input.\n", &*input);
+			printf("Invalid input.\n");
 		}
 	}
-    
 }
 int main(void)
 {
-    printf("Enter the number to calculate the factorial of: ");
     Bool running = true;
     while(running)
     {
-        inputType number = int;
-        int x = convertUserInput(readUserInput(number));
+        printf("Enter the number to calculate the factorial of: ");
+        inputType num = number;
+        char *s = readUserInput(num);
+        int x = convertUserInput(s);
         mpz_t xFactorial;
         mpz_init(xFactorial);
         calculateFactorial(xFactorial, x);
