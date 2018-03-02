@@ -11,11 +11,16 @@ enum _bool
 	true = 1
 };
 
+enum inputType
+{
+    int = 0,
+    char = 1
+};
+
 typedef enum _bool Bool;
 
-int readUserInput(void)
+int readUserInput(inputType type)
 {
-	
 	char s[MAX_LINE];
 	Bool valid = false;
 	while (!valid)
@@ -29,19 +34,38 @@ int readUserInput(void)
 			valid = true;
 			for (int i = 0; i < len; ++i)
 			{
-				if (!isdigit(s[i]))
-				{
-					valid = false;
-					break;
-				}
+                if (type == int)
+                {
+                    if (!isdigit(s[i]))
+				    {
+					    valid = false;
+					    break;
+				    }
+                }
+                else if (type == char)
+                {
+                    if (isdigit(s[i]))
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
 			}
 		}
-		if (!valid)
-			printf("Enter an integer: ");
+		if (!valid && type == int)
+			printf("Enter an positive integer: ");
+        else if (!valid && type == char)
+            printf("Enter a character: ");
 	}
-    int num;
-    sscanf(s, "%d", &num);
-	return num;
+    if (type == int)
+    {
+        int num;
+        sscanf(s, "%d", &num);
+	    return num;
+    }
+    else if (type == char)
+    {
+        char 
 }
 void calculateFactorial(mpz_t result, int x)
 {
@@ -51,13 +75,25 @@ void calculateFactorial(mpz_t result, int x)
         mpz_mul_ui(result, result, i);
 }
 
+Bool userMenu(void)
+{
+    printf("Enter 'f' to calculate another factorial.\n Enter 'q' to quit.\n");
+    inputType text = char;
+    readUserInput(text);
+}
 int main(void)
 {
     printf("Enter the number to calculate the factorial of: ");
-    int x = readUserInput();
-    mpz_t xFactorial;
-    mpz_init(xFactorial);
-    calculateFactorial(xFactorial, x);
-    gmp_printf("%d! = %Zd\n", x, xFactorial);
+    Bool running = true;
+    while(running)
+    {
+        inputType number = int;
+        int x = readUserInput();
+        mpz_t xFactorial;
+        mpz_init(xFactorial);
+        calculateFactorial(xFactorial, x);
+        gmp_printf("%d! = %Zd\n", x, xFactorial);
+        running = userMenu();
+    }
     return 0;
 }
