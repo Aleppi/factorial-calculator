@@ -11,12 +11,17 @@ enum _bool
 	true = 1
 };
 
-typedef enum _bool Bool;
-
-int readUserInput(void)
+enum _inputType
 {
-	
-	char s[MAX_LINE];
+    number = 0,
+    letter = 1
+};
+
+typedef enum _bool Bool;
+typedef enum _inputType inputType;
+char *readUserInput(inputType type)
+{
+	static char s[MAX_LINE];
 	Bool valid = false;
 	while (!valid)
 	{
@@ -29,18 +34,36 @@ int readUserInput(void)
 			valid = true;
 			for (int i = 0; i < len; ++i)
 			{
-				if (!isdigit(s[i]))
-				{
-					valid = false;
-					break;
-				}
+                if (type == number)
+                {
+                    if (!isdigit(s[i]))
+				    {
+					    valid = false;
+					    break;
+				    }
+                }
+                else if (type == letter)
+                {
+                    if (isdigit(s[i]))
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
 			}
 		}
-		if (!valid)
-			printf("Enter an integer: ");
+		if (!valid && type == number)
+			printf("Enter an positive integer: ");
+        else if (!valid && type == letter)
+            printf("Enter a character: ");
 	}
+	return s;
+}
+
+int convertUserInput(char *s)
+{
     int num;
-    sscanf(s, "%d", &num);
+	sscanf(s, "%d", &num);
 	return num;
 }
 void calculateFactorial(mpz_t result, int x)
@@ -51,13 +74,44 @@ void calculateFactorial(mpz_t result, int x)
         mpz_mul_ui(result, result, i);
 }
 
+Bool userMenu(void)
+{
+	Bool validInput = false;
+	while (!validInput)
+	{
+		printf("Enter 'f' to calculate another factorial.\nEnter 'q' to quit.\n");
+		inputType text = letter;
+		char *input = readUserInput(text);
+		if (input[0] == 'f' && input[1] == '\n')
+		{
+			validInput = true;
+			return true;
+		}
+		else if (input[0] == 'q' && input[1] == '\n')
+		{
+			validInput = true;
+			return false;
+		}
+		else
+		{
+			printf("Invalid input.\n");
+		}
+	}
+}
 int main(void)
 {
-    printf("Enter the number to calculate the factorial of: ");
-    int x = readUserInput();
-    mpz_t xFactorial;
-    mpz_init(xFactorial);
-    calculateFactorial(xFactorial, x);
-    gmp_printf("%d! = %Zd\n", x, xFactorial);
+    Bool running = true;
+    while(running)
+    {
+        printf("Enter the number to calculate the factorial of: ");
+        inputType num = number;
+        char *s = readUserInput(num);
+        int x = convertUserInput(s);
+        mpz_t xFactorial;
+        mpz_init(xFactorial);
+        calculateFactorial(xFactorial, x);
+        gmp_printf("%d! = %Zd\n", x, xFactorial);
+        running = userMenu();
+    }
     return 0;
 }
