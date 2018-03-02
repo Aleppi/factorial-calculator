@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdint.h>
 
 #define MAX_LINE 100
 
@@ -12,7 +13,7 @@ enum _bool
 
 typedef enum _bool Bool;
 
-unsigned long long readUserInput(void)
+uint64_t readUserInput(void)
 {
 	
 	char s[MAX_LINE];
@@ -38,14 +39,14 @@ unsigned long long readUserInput(void)
 		if (!valid)
 			printf("Enter an integer: ");
 	}
-    unsigned long long num;
+    uint64_t num;
     sscanf(s, "%d", &num);
 	return num;
 }
-unsigned long long calculateFactorial(unsigned long long x)
+uint64_t calculateFactorial(unsigned long long x)
 {
-    unsigned long long result = 1;
-    for (unsigned long long i = x; i > 1; --i)
+    uint64_t result = 1;
+    for (uint64_t i = x; i > 1; --i)
         result *= i;
     return result;
 }
@@ -53,8 +54,8 @@ unsigned long long calculateFactorial(unsigned long long x)
 int main(void)
 {
     printf("Enter the number to calculate the factorial of: ");
-    unsigned long long x = readUserInput();
-    unsigned long long xFactorial = calculateFactorial(x);
+    uint64_t x = readUserInput();
+    uint64_t xFactorial = calculateFactorial(x);
     printf("%d! = %llu\n", x, xFactorial);
     return 0;
 }
