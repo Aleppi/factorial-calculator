@@ -18,8 +18,8 @@ enum inputType
 };
 
 typedef enum _bool Bool;
-
-int readUserInput(inputType type)
+ 
+char *readUserInput(inputType type)
 {
 	char s[MAX_LINE];
 	Bool valid = false;
@@ -57,15 +57,13 @@ int readUserInput(inputType type)
         else if (!valid && type == char)
             printf("Enter a character: ");
 	}
-    if (type == int)
-    {
-        int num;
-        sscanf(s, "%d", &num);
-	    return num;
-    }
-    else if (type == char)
-    {
-        char 
+	return s;
+}
+
+int convertUserInput(char *s)
+    int num
+	sscanf(s, "%d", &num);
+	return num;
 }
 void calculateFactorial(mpz_t result, int x)
 {
@@ -77,9 +75,28 @@ void calculateFactorial(mpz_t result, int x)
 
 Bool userMenu(void)
 {
-    printf("Enter 'f' to calculate another factorial.\n Enter 'q' to quit.\n");
-    inputType text = char;
-    readUserInput(text);
+	Bool validInput = false;
+	while (!validInput)
+	{
+		printf("Enter 'f' to calculate another factorial.\n Enter 'q' to quit.\n");
+		inputType text = char;
+		char *input = readUserInput(text);
+		if (&*input == 'f')
+		{
+			validInput = true;
+			return;
+		}
+		else if (&*input == 'q')
+		{
+			validInput = true;
+			return false;
+		}
+		else
+		{
+			printf("%s is invalid input.\n", &*input);
+		}
+	}
+    
 }
 int main(void)
 {
@@ -88,7 +105,7 @@ int main(void)
     while(running)
     {
         inputType number = int;
-        int x = readUserInput();
+        int x = convertUserInput(readUserInput(number));
         mpz_t xFactorial;
         mpz_init(xFactorial);
         calculateFactorial(xFactorial, x);
