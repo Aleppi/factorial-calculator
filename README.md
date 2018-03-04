@@ -9,5 +9,5 @@ gcc -o factorial factorial.c
 ~~~
 To compile the Master branch from source compile using GCC with the GNU MP library installed and with the `-lgmp` option enabled.
 ~~~
-gcc -lgmp -o factorial -factorial.c
+gcc -lgmp -o factorial factorial.c
 ~~~
